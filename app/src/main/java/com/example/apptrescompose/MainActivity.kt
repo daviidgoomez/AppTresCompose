@@ -2,6 +2,7 @@ package com.example.apptrescompose
 
 import android.R
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -27,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,42 +65,14 @@ fun AppPreview() {
     }
 }
 
-@Composable
-fun test() {
-    var switchState by remember { mutableStateOf(false) }
-
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()
-        .padding(25.dp)) {
-        val (switch,interruptor) = createRefs()
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row {
-                Switch(checked = switchState,
-                    onCheckedChange = {isChecked ->
-                        switchState = isChecked
-                    },
-                    modifier = Modifier.size(20.dp)
-
-                )
-            }
-        }
-    }
-}
-
-fun imageModifier() {
-    val imageModifier = Modifier
-        .size(150.dp)
-        .border(BorderStroke(1.dp, Color.Black))
-        .background(Color.Yellow)
-}
-
-
 
 @Composable
 fun mainApp() {
-    //val imageCarrousel = listOf(R.drawable.ic_dialog_alert,
-       // R.drawable.ic_lock_power_off,
-      //  R.drawable.ic_dialog_map)
+    val images = listOf(
+        R.drawable.ic_dialog_alert,
+        R.drawable.ic_lock_power_off,
+        R.drawable.ic_dialog_map
+    )
 
     val imageModifier = Modifier
         .size(60.dp)
@@ -106,15 +80,19 @@ fun mainApp() {
         .background(Color.Cyan)
 
     var switchState by remember { mutableStateOf(false) }
-   // var selectedPageIndex by remember { mutableStateOf(0) }
+    var selectedPageIndex by remember { mutableStateOf(0) }
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()
-        .padding(25.dp)) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(25.dp)
+    ) {
         val (switch, interruptor, threeLines, pulsado, noPulsado,
             anteriorButton, postButton, imageMap, imagePowerOff, imageAlert) = createRefs()
-        Switch(checked = switchState,
-            onCheckedChange = {isChecked ->
+
+        Switch(
+            checked = switchState,
+            onCheckedChange = { isChecked ->
                 switchState = isChecked
             },
             modifier = Modifier
@@ -125,96 +103,93 @@ fun mainApp() {
                 }
         )
 
-        Text(text = "Interruptor",
+        Text(
+            text = "Interruptor",
             modifier = Modifier
                 .padding(30.dp)
                 .constrainAs(interruptor) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-
-                })
-
-
-        Text(text = "El interruptor del SWITCH ha sido pulsado" +
-                "\nEs una aplicación interesante," +
-                "\nDe desarrollo de Aplicaciones Android",
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.constrainAs(threeLines) {
-                top.linkTo(switch.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-
+                }
         )
 
-        Text(text = "PULSADO", fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(15.dp)
-                .constrainAs(pulsado) {
-                    top.linkTo(threeLines.bottom)
+        Text(
+            text = "El interruptor del SWITCH ha sido pulsado" +
+                    "\nEs una aplicación interesante," +
+                    "\nDe desarrollo de Aplicaciones Android",
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.alpha(if (switchState) 1f else 0f)
+                .constrainAs(threeLines) {
+                    top.linkTo(switch.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                })
-        Text(text = "NO PULSADO", fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(15.dp)
-                .constrainAs(noPulsado) {
-                    top.linkTo(threeLines.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                })
+                }
+        )
+
+        if (switchState) {
+            Text(
+                text = "PULSADO",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(15.dp)
+                    .constrainAs(pulsado) {
+                        top.linkTo(threeLines.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+        } else {
+            Text(
+                text = "NO PULSADO",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(15.dp)
+                    .constrainAs(noPulsado) {
+                        top.linkTo(threeLines.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+        }
 
         Button(onClick = {
-
+            // Lógica del botón ANTERIOR
+            if (selectedPageIndex > 0) {
+                selectedPageIndex--
+            }
         }, modifier = Modifier.constrainAs(anteriorButton) {
             bottom.linkTo(parent.bottom)
             start.linkTo(parent.start)
-
         }) {
             Text("ANT")
         }
 
         Button(onClick = {
-
-        }, modifier = Modifier
-            .constrainAs(postButton) {
+            // Lógica del botón POSTERIOR
+            if (selectedPageIndex < images.size - 1) {
+                selectedPageIndex++
+            }
+        }, modifier = Modifier.constrainAs(postButton) {
             bottom.linkTo(parent.bottom)
             end.linkTo(parent.end)
-
         }) {
             Text("POS")
         }
 
-
-
-        Image(painter = painterResource(id = R.drawable.ic_dialog_map),
-            contentDescription = "map",
+        Image(
+            painter = painterResource(id = images[selectedPageIndex]),
+            contentDescription = null,
             modifier = imageModifier.constrainAs(imageMap) {
                 start.linkTo(anteriorButton.end)
                 end.linkTo(postButton.start)
                 bottom.linkTo(parent.bottom)
-            })
-
-        Image(painter = painterResource(id = R.drawable.ic_dialog_alert),
-            contentDescription = "alert",
-            modifier = imageModifier.constrainAs(imageAlert) {
-                start.linkTo(anteriorButton.end)
-                end.linkTo(postButton.start)
-                bottom.linkTo(parent.bottom)
-            })
-
-        Image(painter = painterResource(id = R.drawable.ic_lock_power_off),
-            contentDescription = "poweroff",
-            modifier = imageModifier.constrainAs(imagePowerOff) {
-                start.linkTo(anteriorButton.end)
-                end.linkTo(postButton.start)
-                bottom.linkTo(parent.bottom)
-            })
+            }
+        )
     }
+}
 
-    }
 
 
 
