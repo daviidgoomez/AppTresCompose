@@ -84,7 +84,7 @@ fun mainApp() {
         .border(BorderStroke(1.dp, Color.Black))
         .background(Color.Cyan)
 
-    var switchState by remember { mutableStateOf(false) }
+    var switchState by remember { mutableStateOf(true) }
     var selectedPageIndex by remember { mutableStateOf(0) }
 
     ConstraintLayout(
