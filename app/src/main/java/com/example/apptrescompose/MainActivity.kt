@@ -90,7 +90,7 @@ fun mainApp() {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(25.dp)
+            .padding(40.dp)
     ) {
         val (switch, interruptor, threeLines, pulsado, noPulsado,
             anteriorButton, postButton, imageMap, imagePowerOff, imageAlert) = createRefs()
