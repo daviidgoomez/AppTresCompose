@@ -152,7 +152,7 @@ fun mainApp() {
                 modifier = Modifier
                     .padding(15.dp)
                     .constrainAs(noPulsado) {
-                        top.linkTo(threeLines.bottom)
+                        top.linkTo(switch.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
