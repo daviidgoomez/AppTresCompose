@@ -71,7 +71,12 @@ fun mainApp() {
     val images = listOf(
         R.drawable.ic_dialog_alert,
         R.drawable.ic_lock_power_off,
-        R.drawable.ic_dialog_map
+        R.drawable.ic_dialog_map,
+        R.drawable.ic_delete,
+        R.drawable.ic_dialog_info,
+        R.drawable.ic_dialog_email,
+        R.drawable.ic_dialog_dialer,
+        R.drawable.ic_input_delete
     )
 
     val imageModifier = Modifier
@@ -156,9 +161,7 @@ fun mainApp() {
 
         Button(onClick = {
             // Lógica del botón ANTERIOR
-            if (selectedPageIndex > 0) {
-                selectedPageIndex--
-            }
+            selectedPageIndex = (selectedPageIndex - 1 + images.size) % images.size
         }, modifier = Modifier.constrainAs(anteriorButton) {
             bottom.linkTo(parent.bottom)
             start.linkTo(parent.start)
@@ -168,9 +171,7 @@ fun mainApp() {
 
         Button(onClick = {
             // Lógica del botón POSTERIOR
-            if (selectedPageIndex < images.size - 1) {
-                selectedPageIndex++
-            }
+            selectedPageIndex = (selectedPageIndex + 1) % images.size
         }, modifier = Modifier.constrainAs(postButton) {
             bottom.linkTo(parent.bottom)
             end.linkTo(parent.end)
@@ -189,6 +190,7 @@ fun mainApp() {
         )
     }
 }
+
 
 
 
